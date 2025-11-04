@@ -1,8 +1,24 @@
 <!doctype html>
 <html>
   <head>
-    <script src="script.js"></script>
+    <style>
+     #main > .alive {
+         background: darkgrey;
+     }
+     #main > * {
+         width: 10px;
+         height: 10px;
+         background: lightgrey
+     }
+     #main {
+         display:grid;
+         grid-template-columns: repeat(100, 10px);
+         gap: 1px;
+     }
+    </style>
   </head>
   <body>
+    <div id="main"></div>
+    <script src="script.js"></script>
   </body>
 </html>

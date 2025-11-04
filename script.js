@@ -2,7 +2,15 @@ const BOARD_WIDTH = 100;
 const BOARD_HEIGHT = 50;
 const BOARD_ELEMENTS = BOARD_HEIGHT * BOARD_WIDTH
 
-function newBoard() { return Array.from({length: BOARD_ELEMENTS}).map(() => false); }
+function newBoard() { return Array.from({length: BOARD_ELEMENTS}).map(() => Math.random() < 0.5); }
+
+function newVisualBoard() {
+  return Array.from({length: BOARD_ELEMENTS}).map(() => document.createElement("div"));
+}
+
+const visualBoard = newVisualBoard()
+
+document.getElementById("main").append(...visualBoard);
 
 function getIndex(x, y) {
   if (x < 0) x += BOARD_WIDTH;
@@ -51,13 +59,26 @@ function updateBoard(board) {
      set(nextBoard, x, y, deadOrAlive(get(board, x, y), count));
     }
   }
+    return nextBoard
 }
 
-const lastBoard = newBoard();
-const currentBoard = newBoard();
+let currentBoard = newBoard();
 
-function gameLoop() {
-  while (true) {
-    currentBoard = updateBoard(lastBoard);
+function render(board, visualBoard) {
+  for (let x = 0; x < BOARD_WIDTH; x++) {
+    for (let y = 0; y < BOARD_HEIGHT; y++) {
+      let elem = get(visualBoard, x, y);
+      elem.classList.toggle("alive", get(board, x,y));
+    }
   }
 }
+
+async function gameLoop() {
+    while (true) {
+        currentBoard = updateBoard(currentBoard);
+        render(currentBoard, visualBoard);
+      await new Promise((resolve) => {setTimeout(resolve, 300)});
+    }
+}
+
+gameLoop()
