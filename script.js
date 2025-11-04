@@ -4,9 +4,18 @@ const BOARD_ELEMENTS = BOARD_HEIGHT * BOARD_WIDTH
 
 function newBoard() { return Array.from({length: BOARD_ELEMENTS}).map(() => Math.random() < 0.5); }
 
+function onMouseEnter(event) {
+  if (drawing) {
+    const index = parseInt(event.target.dataset.index);
+    currentBoard[index] = true;
+    renderCell(currentBoard, visualBoard, index % BOARD_WIDTH, Math.floor(index / BOARD_WIDTH));
+  }
+}
+
 function newCellElem(index) {
   const elem = document.createElement("div");
   elem.dataset.index = index;
+  elem.addEventListener('mouseenter', onMouseEnter);
   return elem;
 }
 
@@ -16,13 +25,12 @@ function newVisualBoard() {
 
 const visualBoard = newVisualBoard()
 
+let drawing = false;
+
 const mainElem = document.getElementById("main");
 mainElem.append(...visualBoard);
-mainElem.addEventListener('click', (event) => {
-  const index = parseInt(event.target.dataset.index);
-  currentBoard[index] = !currentBoard[index];
-  renderCell(currentBoard, visualBoard, index % BOARD_WIDTH, Math.floor(index / BOARD_WIDTH));
-});
+mainElem.addEventListener('mousedown', () => drawing = true)
+mainElem.addEventListener('mousedown', () => drawing = false)
 
 function getIndex(x, y) {
   if (x < 0) x += BOARD_WIDTH;
